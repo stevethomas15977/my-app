@@ -1,5 +1,8 @@
+from app.api import run
+
+
 def main():
-    print("Hello from backend!")
+    run()
 
 
 if __name__ == "__main__":

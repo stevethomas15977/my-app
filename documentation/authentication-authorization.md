@@ -65,7 +65,6 @@ The current Terraform implementation in `backend/terraform/cognito.tf` provision
 - OAuth scopes for `email`, `openid`, and `profile`
 - Local callback/logout URLs for development
 - Optional `tenant_id` custom user attribute
-- Cognito Identity Pool and IAM roles for authenticated/unauthenticated identities
 
 This is enough to start authentication work, but it does not yet configure every capability described in the future architecture. In particular, the current Terraform does not yet configure:
 
@@ -73,6 +72,7 @@ This is enough to start authentication work, but it does not yet configure every
 - Hosted UI domain
 - SAML/OIDC enterprise identity providers
 - Production callback/logout URLs
+- Cognito Identity Pool or IAM roles for direct browser access to AWS services
 - Application database tables for tenants, memberships, roles, or invitations
 
 The recommended implementation is therefore:

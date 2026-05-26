@@ -11,6 +11,15 @@ on:
         options:
           - prod
           - dev
+      command:
+        description: 'Select the command to run'
+        required: true
+        default: 'plan'
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
 
 env:
   AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
@@ -37,10 +46,15 @@ jobs:
         working-directory: backend/terraform
         run: terraform init -backend-config=envs/${{ github.event.inputs.environment }}/backend.hcl
 
-      - name: Terraform plan
+      - name: Terraform command
         working-directory: backend/terraform
-        run: terraform plan
-
-      - name: Terraform apply
-        working-directory: backend/terraform
-        run: terraform apply -auto-approve
+        run: |
+          if [ "${{ github.event.inputs.command }}" == "plan" ]; then
+            terraform plan 
+          fi
+          if [ "${{ github.event.inputs.command }}" == "apply" ]; then
+            terraform apply -auto-approve
+          fi
+          if [ "${{ github.event.inputs.command }}" == "destroy" ]; then
+            terraform destroy -auto-approve
+          fi

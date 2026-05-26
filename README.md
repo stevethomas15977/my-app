@@ -83,6 +83,8 @@ Tenant membership, roles, invitations, and fine-grained authorization should be 
 
 See [documentation/authentication-authorization.md](documentation/authentication-authorization.md) for the detailed recommendation.
 
+See [documentation/tenant-administrator-guide.md](documentation/tenant-administrator-guide.md) for the current tenant administrator workflow.
+
 ## Repository Structure
 
 ```text
@@ -212,3 +214,8 @@ documentation/HVAC_Proposal_Submittal_v0.3_Scope.docx
 ```
 
 That document is the living product/technical scope. This README summarizes the repo and current implementation direction.
+
+Additional implementation documentation:
+
+- [Authentication and authorization architecture](documentation/authentication-authorization.md)
+- [Tenant administrator guide](documentation/tenant-administrator-guide.md)

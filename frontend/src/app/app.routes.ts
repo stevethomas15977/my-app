@@ -1,3 +1,10 @@
 import { Routes } from '@angular/router';
 
-export const routes: Routes = [];
+import { TenantWorkspaceComponent } from './tenants/tenant-workspace.component';
+
+export const routes: Routes = [
+  {
+    path: '',
+    component: TenantWorkspaceComponent,
+  },
+];

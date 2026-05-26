@@ -1,0 +1,169 @@
+<main class="workspace">
+  <aside class="tenant-list" aria-label="Tenants">
+    <div class="brand">
+      <span class="brand-mark">HV</span>
+      <div>
+        <h1>Tenant Admin</h1>
+        <p>HVAC Proposal Automation</p>
+      </div>
+    </div>
+
+    <div class="tenant-stack">
+      @for (tenant of tenants(); track tenant.tenant_id) {
+        <button
+          type="button"
+          class="tenant-button"
+          [class.active]="tenant.tenant_id === selectedTenant()?.tenant_id"
+          (click)="selectTenant(tenant)"
+        >
+          <span>{{ tenant.tenant_name }}</span>
+          <small>{{ tenant.status }}</small>
+        </button>
+      } @empty {
+        <div class="empty-state">No tenants yet</div>
+      }
+    </div>
+  </aside>
+
+  <section class="content">
+    <header class="toolbar">
+      <div>
+        <p class="eyebrow">Multi-tenant foundation</p>
+        <h2>{{ selectedTenant()?.tenant_name ?? 'Create tenant' }}</h2>
+      </div>
+      @if (loading()) {
+        <span class="status">Working</span>
+      }
+    </header>
+
+    @if (error()) {
+      <div class="alert error">{{ error() }}</div>
+    }
+
+    @if (success()) {
+      <div class="alert success">{{ success() }}</div>
+    }
+
+    <div class="grid">
+      <form class="panel" [formGroup]="tenantForm" (ngSubmit)="createTenant()">
+        <div class="panel-header">
+          <h3>Tenant Onboarding</h3>
+          <span class="badge">Owner invite</span>
+        </div>
+
+        <label>
+          Tenant name
+          <input formControlName="tenant_name" placeholder="Acme HVAC Services" />
+        </label>
+
+        <label>
+          Owner email
+          <input formControlName="admin_email" type="email" />
+        </label>
+
+        <label>
+          Owner display name
+          <input formControlName="display_name" />
+        </label>
+
+        <button type="submit" [disabled]="loading()">Create tenant</button>
+      </form>
+
+      <form class="panel" [formGroup]="acceptInvitationForm" (ngSubmit)="acceptInvitation()">
+        <div class="panel-header">
+          <h3>Accept Invitation</h3>
+          <span class="badge">{{ pendingInvitations().length }} pending</span>
+        </div>
+
+        <label>
+          Invitation token
+          <input formControlName="token" />
+        </label>
+
+        <label>
+          Display name
+          <input formControlName="display_name" />
+        </label>
+
+        <button type="submit" [disabled]="loading()">Accept invitation</button>
+      </form>
+    </div>
+
+    <div class="grid">
+      <section class="panel wide">
+        <div class="panel-header">
+          <h3>Members</h3>
+          <span class="badge">{{ members().length }} active</span>
+        </div>
+
+        <div class="table">
+          <div class="table-row table-head">
+            <span>Name</span>
+            <span>Email</span>
+            <span>Role</span>
+            <span>Status</span>
+          </div>
+          @for (member of members(); track member.tenant_id + member.user_id) {
+            <div class="table-row">
+              <span>{{ member.display_name }}</span>
+              <span>{{ member.email }}</span>
+              <span>{{ member.role }}</span>
+              <span>{{ member.status }}</span>
+            </div>
+          } @empty {
+            <div class="empty-state">No accepted members</div>
+          }
+        </div>
+      </section>
+
+      <form class="panel" [formGroup]="inviteForm" (ngSubmit)="inviteUser()">
+        <div class="panel-header">
+          <h3>Invite User</h3>
+          <span class="badge">Tenant roles</span>
+        </div>
+
+        <label>
+          Email
+          <input formControlName="email" type="email" placeholder="estimator@example.com" />
+        </label>
+
+        <label>
+          Role
+          <select formControlName="role">
+            @for (role of roles; track role) {
+              <option [value]="role">{{ role }}</option>
+            }
+          </select>
+        </label>
+
+        <button type="submit" [disabled]="loading() || !selectedTenant()">Invite user</button>
+      </form>
+    </div>
+
+    <section class="panel wide">
+      <div class="panel-header">
+        <h3>Invitations</h3>
+        <span class="badge">{{ invitations().length }} total</span>
+      </div>
+
+      <div class="table invitations">
+        <div class="table-row table-head">
+          <span>Email</span>
+          <span>Role</span>
+          <span>Status</span>
+          <span>Token</span>
+        </div>
+        @for (invitation of invitations(); track invitation.invitation_id) {
+          <div class="table-row">
+            <span>{{ invitation.email }}</span>
+            <span>{{ invitation.role }}</span>
+            <span>{{ invitation.status }}</span>
+            <code>{{ invitation.token }}</code>
+          </div>
+        } @empty {
+          <div class="empty-state">No invitations</div>
+        }
+      </div>
+    </section>
+  </section>
+</main>
